@@ -41,14 +41,26 @@ Player.prototype.atBat = function() {
       case pitch <= this.battingAverage:
         console.log("hit!");
         hit++;
+        homeTeam.nextBatter().atBat();
         break;
       case pitch > this.battingAverage:
         console.log("strike!");
         strike++;
+        if (strike === 3) {
+          console.log("You have ", strike, "strikes, You're Out!");
+          homeTeam.nextBatter().atBat();
+        }
         console.log("You have ", strike, "strikes");
         break;
     }
   }
+};
+Array.prototype.current = 0;
+Array.prototype.nextBatter = function() {
+  if (!(this.current + 1 in this)) {
+    this.current = 0;
+  }
+  return this[++this.current];
 };
 
 var count = 0;
