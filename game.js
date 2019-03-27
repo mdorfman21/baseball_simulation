@@ -13,6 +13,11 @@ var positions = [
   "rf"
 ];
 
+var state = {
+  currentBatter: 0,
+  outs: 0
+};
+
 //make the teams' empty array to push the player objects to
 var homeTeam = [];
 var awayTeam = [];
@@ -35,33 +40,43 @@ Player.prototype.printStats = function() {
 Player.prototype.atBat = function() {
   var strike = 0;
   var hit = 0;
-  while (strike < 3 && hit < 1) {
+  while (strike < 3 && hit < 1 && state.outs < 3) {
     var pitch = Math.random() / 4;
     switch (true) {
       case pitch <= this.battingAverage:
         console.log("hit!");
         hit++;
-        homeTeam.nextBatter().atBat();
+        nextBatter(homeTeam, state).atBat();
         break;
       case pitch > this.battingAverage:
         console.log("strike!");
         strike++;
         if (strike === 3) {
           console.log("You have ", strike, "strikes, You're Out!");
-          homeTeam.nextBatter().atBat();
+          state.outs++;
+          nextBatter(homeTeam, state).atBat();
+        } else {
+          console.log("You have ", strike, "strikes");
+          break;
         }
-        console.log("You have ", strike, "strikes");
-        break;
     }
   }
 };
-Array.prototype.current = 0;
-Array.prototype.nextBatter = function() {
-  if (!(this.current + 1 in this)) {
-    this.current = 0;
+
+function nextBatter(team, state) {
+  if (state.currentBatter + 1.1 > team.length) {
+    state.currentBatter = 0;
+    console.log("YOU GOT HERE");
+    console.log(state.currentBatter);
+    console.log(team.length);
+    return team[state.currentBatter];
+  } else {
+    state.currentBatter++;
+    console.log(state.currentBatter);
+    console.log(team.length);
+    return team[state.currentBatter];
   }
-  return this[++this.current];
-};
+}
 
 var count = 0;
 function assignTeams(count) {
