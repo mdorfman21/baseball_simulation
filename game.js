@@ -15,7 +15,19 @@ var positions = [
 
 var state = {
   currentBatter: 0,
-  outs: 0
+  outs: 0,
+  inning: 1,
+  homeTeamBatting: false,
+  awayTeamBatting: true,
+  onFirst: false,
+  onSecond: false,
+  onThird: false,
+  home: {
+    score: 0
+  },
+  away: {
+    score: 0
+  }
 };
 
 //make the teams' empty array to push the player objects to
@@ -94,7 +106,204 @@ function assignTeams(count) {
   }
 }
 
+function single(team, state) {
+  switch (true) {
+    case state.onThird === true &&
+      state.onSecond === true &&
+      state.onFirst === true:
+      state[team].score++;
+      basesLoaded();
+      break;
+    case state.onThird === true && state.onSecond === true:
+      state[team].score++;
+      firstAndThird();
+      break;
+    case state.onSecond === true && state.onFirst === true:
+      basesLoaded();
+      break;
+    case state.onThird === true && state.onFirst === true:
+      state[team].score++;
+      firstAndSecond();
+      break;
+    case state.onThird === true:
+      state[team].score++;
+      first();
+      break;
+    case state.onSecond === true:
+      firstAndThird();
+      break;
+    case state.onFirst === true:
+      firstAndSecond();
+      break;
+    default:
+      first();
+      break;
+  }
+}
+
+function double(team, state) {
+  switch (true) {
+    case state.onThird === true &&
+      state.onSecond === true &&
+      state.onFirst === true:
+      state[team].score += 2;
+      secondAndThird();
+      break;
+    case state.onThird === true && state.onSecond === true:
+      state[team].score += 2;
+      second();
+      break;
+    case state.onSecond === true && state.onFirst === true:
+      secondAndThird();
+      break;
+    case state.onThird === true && state.onFirst === true:
+      state[team].score++;
+      secondAndThird();
+      break;
+    case state.onThird === true:
+      state[team].score++;
+      second();
+      break;
+    case state.onSecond === true:
+      state[team].score++;
+      second();
+      break;
+    case state.onFirst === true:
+      secondAndThird();
+      break;
+    default:
+      second();
+      break;
+  }
+}
+
+function triple(team, state) {
+  switch (true) {
+    case state.onThird === true &&
+      state.onSecond === true &&
+      state.onFirst === true:
+      state[team].score += 3;
+      third();
+      break;
+    case state.onThird === true && state.onSecond === true:
+      state[team].score += 2;
+      third();
+      break;
+    case state.onSecond === true && state.onFirst === true:
+      state[team].score += 2;
+      third();
+      break;
+    case state.onThird === true && state.onFirst === true:
+      state[team].score += 2;
+      third();
+      break;
+    case state.onThird === true:
+      state[team].score++;
+      third();
+      break;
+    case state.onSecond === true:
+      state[team].score++;
+      third();
+      break;
+    case state.onFirst === true:
+      state[team].score++;
+      third();
+      break;
+    default:
+      third();
+      break;
+  }
+}
+
+function triple(team, state) {
+  switch (true) {
+    case state.onThird === true &&
+      state.onSecond === true &&
+      state.onFirst === true:
+      state[team].score += 4;
+      empty();
+      break;
+    case state.onThird === true && state.onSecond === true:
+      state[team].score += 3;
+      empty();
+      break;
+    case state.onSecond === true && state.onFirst === true:
+      state[team].score += 3;
+      empty();
+      break;
+    case state.onThird === true && state.onFirst === true:
+      state[team].score += 3;
+      empty();
+      break;
+    case state.onThird === true:
+      state[team].score += 2;
+      empty();
+      break;
+    case state.onSecond === true:
+      state[team].score += 2;
+      empty();
+      break;
+    case state.onFirst === true:
+      state[team].score += 2;
+      empty();
+      break;
+    default:
+      state[team].score++;
+      empty();
+      break;
+  }
+}
+
+function first() {
+  state.onFirst = true;
+  state.onSecond = false;
+  state.onThird = false;
+}
+
+function second() {
+  state.onFirst = false;
+  state.onSecond = true;
+  state.onThird = false;
+}
+
+function third() {
+  state.onFirst = false;
+  state.onSecond = false;
+  state.onThird = true;
+}
+
+function firstAndSecond() {
+  state.onFirst = true;
+  state.onSecond = true;
+  state.onThird = false;
+}
+
+function firstAndThird() {
+  state.onFirst = true;
+  state.onSecond = false;
+  state.onThird = true;
+}
+
+function secondAndThird() {
+  state.onFirst = false;
+  state.onSecond = true;
+  state.onThird = true;
+}
+
+function basesLoaded() {
+  state.onFirst = true;
+  state.onSecond = true;
+  state.onThird = true;
+}
+
+function empty() {
+  state.onFirst = false;
+  state.onSecond = false;
+  state.onThird = false;
+}
+
 assignTeams(count);
 console.log(homeTeam);
 console.log(awayTeam);
-homeTeam[0].atBat();
+single("away", state);
+console.log(state);
